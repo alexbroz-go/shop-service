@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+package usercartorder;
+
+option go_package = "shop-service/proto";
+
+service UserCartOrderService {
+  rpc Register (RegisterRequest) returns (RegisterResponse);
+  rpc Login (LoginRequest) returns (LoginResponse);
+  rpc GetUser (UserRequest) returns (User);
+  rpc GetOrCreateUser (UserRequest) returns (User);
+  rpc GetCart (UserRequest) returns (Cart);
+  rpc AddToCart (AddToCartRequest) returns (Cart);
+  rpc RemoveFromCart (RemoveFromCartRequest) returns (Cart);
+  rpc CreateOrder (CreateOrderRequest) returns (Order);
+  rpc GetOrderHistory (UserRequest) returns (OrderList);
+  rpc GetOrder (OrderRequest) returns (Order);
+}
+
+// Запросы и ответы
+message RegisterRequest {
+  string login = 1;
+  string email = 2;
+  string password = 3;
+}
+message RegisterResponse {
+  bool success = 1;
+  string message = 2;
+}
+message LoginRequest {
+  string login = 1;
+  string password = 2;
+}
+message LoginResponse {
+  bool success = 1;
+  string message = 2;
+  int32 user_id = 3;
+}
+
+message UserRequest {
+  int32 user_id = 1;
+}
+message User {
+  int32 id = 1;
+  string login = 2;
+  string email = 3;
+}
+
+message Cart {
+  int32 id = 1;
+  int32 user_id = 2;
+  string created_at = 3;
+  repeated int32 product_ids = 4;  // В простом случае — пустой список
+}
+
+message AddToCartRequest {
+  int32 user_id = 1;
+  int32 product_id = 2;
+}
+message RemoveFromCartRequest {
+  int32 user_id = 1;
+  int32 product_id = 2;
+}
+message CreateOrderRequest {
+  int32 user_id = 1;
+  int32 product_id = 2;
+  string status = 3;
+}
+message Order {
+  int32 id = 1;
+  int32 user_id = 2;
+  int32 product_id = 3;
+  string created_at = 4;
+  string status = 5;
+}
+message OrderRequest {
+  int32 order_id = 1;
+}
+message OrderList {
+  repeated Order orders = 1;
+}
