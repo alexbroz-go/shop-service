@@ -48,7 +48,7 @@ func createTables() error {
 	return err
 }
 
-// === Методы Таблицы users ===
+//  Методы Таблицы users
 
 func CreateUser(user models.User) (int, error) {
 	var id int
@@ -73,7 +73,7 @@ func GetUserByLogin(login string) (*models.User, error) {
 	return u, err
 }
 
-// === Методы таблицы Cart ===
+//  Методы таблицы Cart
 
 func CreateCart(userID int) (int, error) {
 	var id int
@@ -91,7 +91,7 @@ func GetCartByUserID(userID int) (*models.Cart, error) {
 	return c, err
 }
 
-// === Методы таблицы Order ===
+// Методы таблицы Order
 
 func CreateOrder(order models.Order) (int, error) {
 	var id int
