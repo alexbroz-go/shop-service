@@ -43,13 +43,13 @@ func (s *Service) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginRes
 }
 
 // Получить или создать юзера
-func (s *Service) GetOrCreateUser(ctx context.Context, req *pb.UserRequest) (*pb.User, error) {
+func (s *Service) GetUser(ctx context.Context, req *pb.UserRequest) (*pb.User, error) {
+	// Получите пользователя из базы по req.UserId
 	user, err := database.GetUserByID(int(req.UserId))
 	if err != nil {
-		// По сути, тут можно создать, если нет — для демонстрации возьмем, что создаем нового по логину
-		// Но лучше созадть явно
 		return nil, err
 	}
+
 	return &pb.User{
 		Id:    int32(user.ID),
 		Login: user.Login,
@@ -150,16 +150,4 @@ func (s *Service) GetOrder(ctx context.Context, req *pb.OrderRequest) (*pb.Order
 	}, nil
 }
 
-func (s *Service) GetUser(ctx context.Context, req *pb.UserRequest) (*pb.User, error) {
-	// Получите пользователя из базы по req.UserId
-	user, err := database.GetUserByID(int(req.UserId))
-	if err != nil {
-		return nil, err
-	}
 
-	return &pb.User{
-		Id:    int32(user.ID),
-		Login: user.Login,
-		Email: user.Email,
-	}, nil
-}
