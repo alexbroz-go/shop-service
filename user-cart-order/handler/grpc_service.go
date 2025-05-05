@@ -2,8 +2,8 @@ package handler
 
 import (
 	"context"
-	pb "shop-service/shop-service/proto"
-	"shop-service/user-cart-order/service"
+	pb "user-cart-order/proto"
+	"user-cart-order/service"
 )
 
 type server struct {

@@ -3,9 +3,9 @@ package main
 import (
 	"log"
 	"net"
-	pb "shop-service/shop-service/proto"
-	"shop-service/user-cart-order/database"
-	"shop-service/user-cart-order/handler"
+	"user-cart-order/database"
+	"user-cart-order/handler"
+	pb "user-cart-order/proto"
 
 	"google.golang.org/grpc"
 )

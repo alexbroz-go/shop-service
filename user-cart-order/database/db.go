@@ -3,7 +3,7 @@ package database
 import (
 	"database/sql"
 	"fmt"
-	"shop-service/user-cart-order/models"
+	"user-cart-order/models"
 
 	_ "github.com/lib/pq"
 )
