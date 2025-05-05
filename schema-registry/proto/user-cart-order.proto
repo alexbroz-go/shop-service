@@ -2,7 +2,8 @@ syntax = "proto3";
 
 package usercartorder;
 
-option go_package = "shop-service/proto";
+option go_package = "user-cart-order/proto";
+
 
 service UserCartOrderService {
   rpc Register (RegisterRequest) returns (RegisterResponse);
