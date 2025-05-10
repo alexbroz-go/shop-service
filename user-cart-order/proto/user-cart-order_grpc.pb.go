@@ -22,7 +22,6 @@ const (
 	UserCartOrderService_Register_FullMethodName        = "/usercartorder.UserCartOrderService/Register"
 	UserCartOrderService_Login_FullMethodName           = "/usercartorder.UserCartOrderService/Login"
 	UserCartOrderService_GetUser_FullMethodName         = "/usercartorder.UserCartOrderService/GetUser"
-	UserCartOrderService_GetOrCreateUser_FullMethodName = "/usercartorder.UserCartOrderService/GetOrCreateUser"
 	UserCartOrderService_GetCart_FullMethodName         = "/usercartorder.UserCartOrderService/GetCart"
 	UserCartOrderService_AddToCart_FullMethodName       = "/usercartorder.UserCartOrderService/AddToCart"
 	UserCartOrderService_RemoveFromCart_FullMethodName  = "/usercartorder.UserCartOrderService/RemoveFromCart"
@@ -38,7 +37,6 @@ type UserCartOrderServiceClient interface {
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	GetUser(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*User, error)
-	GetOrCreateUser(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*User, error)
 	GetCart(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*Cart, error)
 	AddToCart(ctx context.Context, in *AddToCartRequest, opts ...grpc.CallOption) (*Cart, error)
 	RemoveFromCart(ctx context.Context, in *RemoveFromCartRequest, opts ...grpc.CallOption) (*Cart, error)
@@ -79,16 +77,6 @@ func (c *userCartOrderServiceClient) GetUser(ctx context.Context, in *UserReques
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(User)
 	err := c.cc.Invoke(ctx, UserCartOrderService_GetUser_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userCartOrderServiceClient) GetOrCreateUser(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*User, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(User)
-	err := c.cc.Invoke(ctx, UserCartOrderService_GetOrCreateUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -162,7 +150,6 @@ type UserCartOrderServiceServer interface {
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	GetUser(context.Context, *UserRequest) (*User, error)
-	GetOrCreateUser(context.Context, *UserRequest) (*User, error)
 	GetCart(context.Context, *UserRequest) (*Cart, error)
 	AddToCart(context.Context, *AddToCartRequest) (*Cart, error)
 	RemoveFromCart(context.Context, *RemoveFromCartRequest) (*Cart, error)
@@ -187,9 +174,6 @@ func (UnimplementedUserCartOrderServiceServer) Login(context.Context, *LoginRequ
 }
 func (UnimplementedUserCartOrderServiceServer) GetUser(context.Context, *UserRequest) (*User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
-}
-func (UnimplementedUserCartOrderServiceServer) GetOrCreateUser(context.Context, *UserRequest) (*User, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetOrCreateUser not implemented")
 }
 func (UnimplementedUserCartOrderServiceServer) GetCart(context.Context, *UserRequest) (*Cart, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCart not implemented")
@@ -280,24 +264,6 @@ func _UserCartOrderService_GetUser_Handler(srv interface{}, ctx context.Context,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserCartOrderServiceServer).GetUser(ctx, req.(*UserRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _UserCartOrderService_GetOrCreateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UserRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserCartOrderServiceServer).GetOrCreateUser(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: UserCartOrderService_GetOrCreateUser_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserCartOrderServiceServer).GetOrCreateUser(ctx, req.(*UserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -428,10 +394,6 @@ var UserCartOrderService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetUser",
 			Handler:    _UserCartOrderService_GetUser_Handler,
-		},
-		{
-			MethodName: "GetOrCreateUser",
-			Handler:    _UserCartOrderService_GetOrCreateUser_Handler,
 		},
 		{
 			MethodName: "GetCart",

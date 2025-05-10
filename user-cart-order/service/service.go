@@ -2,10 +2,10 @@ package service
 
 import (
 	"context"
-	pb "shop-service/shop-service/proto"
-	"shop-service/user-cart-order/database"
-	"shop-service/user-cart-order/models"
 	"time"
+	"user-cart-order/database"
+	"user-cart-order/models"
+	pb "user-cart-order/proto"
 
 	"golang.org/x/crypto/bcrypt"
 )

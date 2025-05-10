@@ -802,18 +802,17 @@ const file_user_cart_order_proto_rawDesc = "" +
 	"\fOrderRequest\x12\x19\n" +
 	"\border_id\x18\x01 \x01(\x05R\aorderId\"9\n" +
 	"\tOrderList\x12,\n" +
-	"\x06orders\x18\x01 \x03(\v2\x14.usercartorder.OrderR\x06orders2\xc3\x05\n" +
+	"\x06orders\x18\x01 \x03(\v2\x14.usercartorder.OrderR\x06orders2\xff\x04\n" +
 	"\x14UserCartOrderService\x12K\n" +
 	"\bRegister\x12\x1e.usercartorder.RegisterRequest\x1a\x1f.usercartorder.RegisterResponse\x12B\n" +
 	"\x05Login\x12\x1b.usercartorder.LoginRequest\x1a\x1c.usercartorder.LoginResponse\x12:\n" +
-	"\aGetUser\x12\x1a.usercartorder.UserRequest\x1a\x13.usercartorder.User\x12B\n" +
-	"\x0fGetOrCreateUser\x12\x1a.usercartorder.UserRequest\x1a\x13.usercartorder.User\x12:\n" +
+	"\aGetUser\x12\x1a.usercartorder.UserRequest\x1a\x13.usercartorder.User\x12:\n" +
 	"\aGetCart\x12\x1a.usercartorder.UserRequest\x1a\x13.usercartorder.Cart\x12A\n" +
 	"\tAddToCart\x12\x1f.usercartorder.AddToCartRequest\x1a\x13.usercartorder.Cart\x12K\n" +
 	"\x0eRemoveFromCart\x12$.usercartorder.RemoveFromCartRequest\x1a\x13.usercartorder.Cart\x12F\n" +
 	"\vCreateOrder\x12!.usercartorder.CreateOrderRequest\x1a\x14.usercartorder.Order\x12G\n" +
 	"\x0fGetOrderHistory\x12\x1a.usercartorder.UserRequest\x1a\x18.usercartorder.OrderList\x12=\n" +
-	"\bGetOrder\x12\x1b.usercartorder.OrderRequest\x1a\x14.usercartorder.OrderB\x14Z\x12shop-service/protob\x06proto3"
+	"\bGetOrder\x12\x1b.usercartorder.OrderRequest\x1a\x14.usercartorder.OrderB\x17Z\x15user-cart-order/protob\x06proto3"
 
 var (
 	file_user_cart_order_proto_rawDescOnce sync.Once
@@ -848,25 +847,23 @@ var file_user_cart_order_proto_depIdxs = []int32{
 	0,  // 1: usercartorder.UserCartOrderService.Register:input_type -> usercartorder.RegisterRequest
 	2,  // 2: usercartorder.UserCartOrderService.Login:input_type -> usercartorder.LoginRequest
 	4,  // 3: usercartorder.UserCartOrderService.GetUser:input_type -> usercartorder.UserRequest
-	4,  // 4: usercartorder.UserCartOrderService.GetOrCreateUser:input_type -> usercartorder.UserRequest
-	4,  // 5: usercartorder.UserCartOrderService.GetCart:input_type -> usercartorder.UserRequest
-	7,  // 6: usercartorder.UserCartOrderService.AddToCart:input_type -> usercartorder.AddToCartRequest
-	8,  // 7: usercartorder.UserCartOrderService.RemoveFromCart:input_type -> usercartorder.RemoveFromCartRequest
-	9,  // 8: usercartorder.UserCartOrderService.CreateOrder:input_type -> usercartorder.CreateOrderRequest
-	4,  // 9: usercartorder.UserCartOrderService.GetOrderHistory:input_type -> usercartorder.UserRequest
-	11, // 10: usercartorder.UserCartOrderService.GetOrder:input_type -> usercartorder.OrderRequest
-	1,  // 11: usercartorder.UserCartOrderService.Register:output_type -> usercartorder.RegisterResponse
-	3,  // 12: usercartorder.UserCartOrderService.Login:output_type -> usercartorder.LoginResponse
-	5,  // 13: usercartorder.UserCartOrderService.GetUser:output_type -> usercartorder.User
-	5,  // 14: usercartorder.UserCartOrderService.GetOrCreateUser:output_type -> usercartorder.User
-	6,  // 15: usercartorder.UserCartOrderService.GetCart:output_type -> usercartorder.Cart
-	6,  // 16: usercartorder.UserCartOrderService.AddToCart:output_type -> usercartorder.Cart
-	6,  // 17: usercartorder.UserCartOrderService.RemoveFromCart:output_type -> usercartorder.Cart
-	10, // 18: usercartorder.UserCartOrderService.CreateOrder:output_type -> usercartorder.Order
-	12, // 19: usercartorder.UserCartOrderService.GetOrderHistory:output_type -> usercartorder.OrderList
-	10, // 20: usercartorder.UserCartOrderService.GetOrder:output_type -> usercartorder.Order
-	11, // [11:21] is the sub-list for method output_type
-	1,  // [1:11] is the sub-list for method input_type
+	4,  // 4: usercartorder.UserCartOrderService.GetCart:input_type -> usercartorder.UserRequest
+	7,  // 5: usercartorder.UserCartOrderService.AddToCart:input_type -> usercartorder.AddToCartRequest
+	8,  // 6: usercartorder.UserCartOrderService.RemoveFromCart:input_type -> usercartorder.RemoveFromCartRequest
+	9,  // 7: usercartorder.UserCartOrderService.CreateOrder:input_type -> usercartorder.CreateOrderRequest
+	4,  // 8: usercartorder.UserCartOrderService.GetOrderHistory:input_type -> usercartorder.UserRequest
+	11, // 9: usercartorder.UserCartOrderService.GetOrder:input_type -> usercartorder.OrderRequest
+	1,  // 10: usercartorder.UserCartOrderService.Register:output_type -> usercartorder.RegisterResponse
+	3,  // 11: usercartorder.UserCartOrderService.Login:output_type -> usercartorder.LoginResponse
+	5,  // 12: usercartorder.UserCartOrderService.GetUser:output_type -> usercartorder.User
+	6,  // 13: usercartorder.UserCartOrderService.GetCart:output_type -> usercartorder.Cart
+	6,  // 14: usercartorder.UserCartOrderService.AddToCart:output_type -> usercartorder.Cart
+	6,  // 15: usercartorder.UserCartOrderService.RemoveFromCart:output_type -> usercartorder.Cart
+	10, // 16: usercartorder.UserCartOrderService.CreateOrder:output_type -> usercartorder.Order
+	12, // 17: usercartorder.UserCartOrderService.GetOrderHistory:output_type -> usercartorder.OrderList
+	10, // 18: usercartorder.UserCartOrderService.GetOrder:output_type -> usercartorder.Order
+	10, // [10:19] is the sub-list for method output_type
+	1,  // [1:10] is the sub-list for method input_type
 	1,  // [1:1] is the sub-list for extension type_name
 	1,  // [1:1] is the sub-list for extension extendee
 	0,  // [0:1] is the sub-list for field type_name
