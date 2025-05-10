@@ -11,7 +11,7 @@ import (
 var DB *sql.DB
 
 func Init() error {
-	dsn := "host=localhost port=5433 user=user password=password dbname=user_cart_order sslmode=disable"
+	dsn := "host=db port=5432 user=user password=password dbname=user_cart_order sslmode=disable"
 	var err error
 	DB, err = sql.Open("postgres", dsn)
 	if err != nil {
