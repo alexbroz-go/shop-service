@@ -1,1 +1,2 @@
-/user-cart-order/proto
+/user-cart-order/proto/user-cart-order_grpc.pb.go
+/user-cart-order/proto/user-cart-order.pb.go
