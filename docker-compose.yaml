@@ -15,5 +15,11 @@ services:
       context: ./user-cart-order
     ports:
       - "50052:50052"
+    environment:  # Переносим переменные напрямую
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_USER: user
+      DB_PASSWORD: password
+      DB_NAME: user_cart_order
     depends_on:
       - db

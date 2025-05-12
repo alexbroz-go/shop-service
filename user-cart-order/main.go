@@ -7,10 +7,15 @@ import (
 	"user-cart-order/handler"
 	pb "user-cart-order/proto"
 
+	"github.com/joho/godotenv"
 	"google.golang.org/grpc"
 )
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 	// Инициализация базы данных
 	if err := database.Init(); err != nil {
 		log.Fatalf("Ошибка инициализации базы: %v", err)

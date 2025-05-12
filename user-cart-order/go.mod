@@ -12,6 +12,7 @@ require (
 )
 
 require (
+	github.com/joho/godotenv v1.5.1 // indirect
 	golang.org/x/net v0.35.0 // indirect
 	golang.org/x/sys v0.32.0 // indirect
 	golang.org/x/text v0.24.0 // indirect

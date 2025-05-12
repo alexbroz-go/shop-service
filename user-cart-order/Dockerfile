@@ -14,12 +14,14 @@ RUN go mod download
 COPY . .
 
 # Собираем приложение
-RUN go build -o main main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -o /app/main
 
 # Финальный образ для запуска
 FROM alpine:latest
 
 WORKDIR /app
+
+COPY .env .
 
 # Копируем скомпилированный файл
 COPY --from=builder /app/main .
