@@ -5,6 +5,7 @@ go 1.23.0
 toolchain go1.23.3
 
 require (
+	github.com/joho/godotenv v1.5.1
 	github.com/lib/pq v1.10.9
 	golang.org/x/crypto v0.37.0
 	google.golang.org/grpc v1.72.0
@@ -12,7 +13,6 @@ require (
 )
 
 require (
-	github.com/joho/godotenv v1.5.1 // indirect
 	golang.org/x/net v0.35.0 // indirect
 	golang.org/x/sys v0.32.0 // indirect
 	golang.org/x/text v0.24.0 // indirect
