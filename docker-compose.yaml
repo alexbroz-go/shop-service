@@ -1,21 +1,46 @@
+# docker-compose.yaml
+# Этот файл описывает конфигурацию сервисов для запуска в Docker.
+# Мы используем версию 3 формата Docker Compose.
+
 services:
   db:
+    # Используем официальный образ PostgreSQL
     image: postgres:latest
     restart: always
     environment:
+      # Настройки для инициализации базы данных
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
       POSTGRES_DB: user_cart_order
     ports:
+      # Проброс порта: внешний порт 5433 -> внутренний порт контейнера 5432
       - "5433:5432"
+    # Проверка здоровья сервиса базы данных
+    # Важно: Добавлена для того, чтобы сервис user-cart-order не запускался до полной готовности базы данных
+    # Это решает проблему, когда сервис user-cart-order не может подключиться к базе данных при старте
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d user_cart_order"]
+      interval: 5s     # Проверка каждые 5 секунд
+      timeout: 5s      # Таймаут проверки
+      retries: 5       # Количество повторных попыток
+      start_period: 10s # Начальный период для инициализации
     
 
   user-cart-order:
     build:
-      context: ./user-cart-order
+      # Используем корневую директорию проекта как контекст для сборки
+      # Это важно, так как Dockerfile ссылается на файлы в schema-registry
+      context: .
+      dockerfile: user-cart-order/Dockerfile
     ports:
+      # Проброс порта для gRPC сервиса
       - "50052:50052"
     depends_on:
-      - db
+      # Ждем, пока база данных будет полностью готова к работе
+      # Используем condition: service_healthy вместо простого списка зависимостей
+      # для решения проблемы с подключением к базе данных
+      db:
+        condition: service_healthy
     env_file:
+      # Подключаем файл с переменными окружения
       - ./user-cart-order/.env
