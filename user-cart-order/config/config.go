@@ -5,7 +5,7 @@ import (
 	"sync"
 )
 
-// Config holds all application configuration
+// Config содержит всю конфигурацию приложения
 type Config struct {
 	// Database settings
 	DBHost     string
@@ -14,7 +14,7 @@ type Config struct {
 	DBPassword string
 	DBName     string
 
-	// Add other settings as needed
+	// Добавьте другие настройки по мере необходимости
 }
 
 var (
@@ -22,7 +22,7 @@ var (
 	instance *Config
 )
 
-// GetConfig returns a singleton Config instance
+// getConfig возвращает экземпляр конфигурации singleton
 func GetConfig() *Config {
 	once.Do(func() {
 		instance = &Config{
@@ -33,13 +33,13 @@ func GetConfig() *Config {
 			DBPassword: getEnvOrDefault("DB_PASSWORD", "postgres"),
 			DBName:     getEnvOrDefault("DB_NAME", "postgres"),
 
-			// Add other settings here
+			// Добавьте другие настройки по мере необходимости
 		}
 	})
 	return instance
 }
 
-// Helper function to get environment variable with default value
+// Вспомогательная функция для получения переменной окружения со значением по умолчанию
 func getEnvOrDefault(key, defaultValue string) string {
 	if value, exists := os.LookupEnv(key); exists {
 		return value
