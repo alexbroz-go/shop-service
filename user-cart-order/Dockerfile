@@ -21,8 +21,6 @@ FROM alpine:latest
 
 WORKDIR /app
 
-COPY .env .
-
 # Копируем скомпилированный файл
 COPY --from=builder /app/main .
 

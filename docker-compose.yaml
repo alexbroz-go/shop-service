@@ -15,7 +15,7 @@ services:
       context: ./user-cart-order
     ports:
       - "50052:50052"
-    env_file:
-      - ./user-cart-order/.env
     depends_on:
       - db
+    env_file:
+      - ./user-cart-order/.env
