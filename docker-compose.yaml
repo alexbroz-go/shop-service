@@ -27,11 +27,7 @@ services:
     
 
   user-cart-order:
-    build:
-      # Используем корневую директорию проекта как контекст для сборки
-      # Это важно, так как Dockerfile ссылается на файлы в schema-registry
-      context: .
-      dockerfile: user-cart-order/Dockerfile
+    image: aleksandraksenov/user-cart-order
     ports:
       # Проброс порта для gRPC сервиса
       - "50052:50052"
