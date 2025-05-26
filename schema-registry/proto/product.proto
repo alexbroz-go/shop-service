@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package product;
+
+option go_package = "product/proto";
+
+// Сервис управления товарами
+service ProductService {
+  // Получить товар по ID
+  rpc GetProduct (GetProductRequest) returns (Product);
+  // Получить товар по названию
+  rpc GetProductByTitle (GetProductByTitleRequest) returns (Product);
+  // Добавить новый товар (админ)
+  rpc AddProduct (AddProductRequest) returns (AddProductResponse);
+  // Удалить товар по ID
+  rpc DeleteProduct (DeleteProductRequest) returns (DeleteProductResponse);
+}
+
+// Запрос для получения товара по ID
+message GetProductRequest {
+  int32 product_id = 1;
+}
+
+// Запрос для поиска товара по названию
+message GetProductByTitleRequest {
+  string title = 1;
+}
+
+// Запрос для добавления нового товара
+message AddProductRequest {
+  string title = 1;
+  string description = 2;
+  double price = 3;
+  int32 count = 4;
+}
+
+// Ответ при добавлении товара
+message AddProductResponse {
+  int32 product_id = 1;
+}
+
+// Запрос для удаления товара по ID
+message DeleteProductRequest {
+  int32 product_id = 1;
+}
+
+// Ответ при удалении товара
+message DeleteProductResponse {
+  bool success = 1;
+}
+
+// Модель товара
+message Product {
+  int32 id = 1;
+  string title = 2;
+  string description = 3;
+  double price = 4;
+  int32 count = 5;
+}
