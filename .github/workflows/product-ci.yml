@@ -3,12 +3,12 @@ name: Product CI/CD
 on:
   workflow_dispatch:
   push:
-    branches: [ main ]
+    branches: [ sacondary ]
     paths:
       - 'product/**'
       - 'schema-registry/proto/product.proto'
   pull_request:
-    branches: [ main ]
+    branches: [ sacondary ]
     paths:
       - 'product/**'
       - 'schema-registry/proto/product.proto'
@@ -34,7 +34,7 @@ jobs:
       uses: docker/build-push-action@v4
       with:
         context: .
-        file: ./user-cart-order/Dockerfile
+        file: ./product/Dockerfile
         push: ${{ github.event_name != 'pull_request' }}
         tags: |
           ${{ secrets.DOCKERHUB_USERNAME }}/product:latest
