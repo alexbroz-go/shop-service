@@ -40,6 +40,7 @@ func createTables() error {
         CREATE TABLE IF NOT EXISTS carts (
             id SERIAL PRIMARY KEY,
             user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+			product_id INTEGER REFERENCES products(id) ON DELETE CASCADE,
             created_at TIMESTAMP DEFAULT NOW()
         );
         CREATE TABLE IF NOT EXISTS orders (
@@ -80,19 +81,19 @@ func GetUserByLogin(login string) (*models.User, error) {
 
 //  Методы таблицы Cart
 
-func CreateCart(userID int) (int, error) {
+func CreateCart(userID int, productID int) (int, error) {
 	var id int
 	err := DB.QueryRow(
-		"INSERT INTO carts (user_id) VALUES ($1) RETURNING id",
-		userID,
+		"INSERT INTO carts (user_id, product_id) VALUES ($1,$2) RETURNING id",
+		userID, productID,
 	).Scan(&id)
 	return id, err
 }
 
 func GetCartByUserID(userID int) (*models.Cart, error) {
 	c := &models.Cart{}
-	err := DB.QueryRow("SELECT id, user_id, created_at FROM carts WHERE user_id=$1", userID).
-		Scan(&c.ID, &c.UserID, &c.CreatedAt)
+	err := DB.QueryRow("SELECT id, user_id, product_id, created_at FROM carts WHERE user_id=$1", userID).
+		Scan(&c.ID, &c.UserID, &c.ProductID, &c.CreatedAt)
 	return c, err
 }
 
@@ -130,4 +131,8 @@ func GetOrderHistory(userID int) ([]*models.Order, error) {
 		orders = append(orders, o)
 	}
 	return orders, nil
+}
+func RemoveProductFromCart(cartID int, productID int) error {
+	_, err := DB.Exec("DELETE FROM carts WHERE cart_id=$1 AND product_id=$2", cartID, productID)
+	return err
 }

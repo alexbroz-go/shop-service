@@ -13,8 +13,6 @@ type Config struct {
 	DBUser     string
 	DBPassword string
 	DBName     string
-
-	// Добавьте другие настройки по мере необходимости
 }
 
 var (
@@ -32,8 +30,6 @@ func GetConfig() *Config {
 			DBUser:     getEnvOrDefault("DB_USER", "postgres"),
 			DBPassword: getEnvOrDefault("DB_PASSWORD", "postgres"),
 			DBName:     getEnvOrDefault("DB_NAME", "postgres"),
-
-			// Добавьте другие настройки по мере необходимости
 		}
 	})
 	return instance

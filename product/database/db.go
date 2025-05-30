@@ -36,18 +36,10 @@ func createTable() error {
             id SERIAL PRIMARY KEY,
             title VARCHAR(255) NOT NULL,
             description TEXT,
-            price NUMERIC(10,2) NOT NULL,
-            count INTEGER NOT NULL
+            price NUMERIC(10,2) NOT NULL
         );
     `)
 	return err
-}
-
-func GetProductByTitle(title string) (*models.Product, error) {
-	p := &models.Product{}
-	err := DB.QueryRow("SELECT id, title, description, price, count FROM products WHERE title=$1", title).
-		Scan(&p.ID, &p.Title, &p.Description, &p.Price, &p.Count)
-	return p, err
 }
 
 func DeleteProduct(id int) (bool, error) {
@@ -65,21 +57,21 @@ func DeleteProduct(id int) (bool, error) {
 func CreateProduct(p models.Product) (int, error) {
 	var id int
 	err := DB.QueryRow(
-		"INSERT INTO products (title, description, price, count) VALUES ($1, $2, $3, $4) RETURNING id",
-		p.Title, p.Description, p.Price, p.Count,
+		"INSERT INTO products (title, description, price) VALUES ($1, $2, $3) RETURNING id",
+		p.Title, p.Description, p.Price,
 	).Scan(&id)
 	return id, err
 }
 
 func GetProductByID(id int) (*models.Product, error) {
 	p := &models.Product{}
-	err := DB.QueryRow("SELECT id, title, description, price, count FROM products WHERE id=$1", id).
-		Scan(&p.ID, &p.Title, &p.Description, &p.Price, &p.Count)
+	err := DB.QueryRow("SELECT id, title, description, price FROM products WHERE id=$1", id).
+		Scan(&p.ID, &p.Title, &p.Description, &p.Price)
 	return p, err
 }
 
 func GetAllProducts() ([]*models.Product, error) {
-	rows, err := DB.Query("SELECT id, title, description, price, count FROM products")
+	rows, err := DB.Query("SELECT id, title, description, price")
 	if err != nil {
 		return nil, err
 	}
@@ -88,10 +80,40 @@ func GetAllProducts() ([]*models.Product, error) {
 	var products []*models.Product
 	for rows.Next() {
 		p := &models.Product{}
-		if err := rows.Scan(&p.ID, &p.Title, &p.Description, &p.Price, &p.Count); err != nil {
+		if err := rows.Scan(&p.ID, &p.Title, &p.Description, &p.Price); err != nil {
 			return nil, err
 		}
 		products = append(products, p)
 	}
 	return products, nil
+}
+
+func SearchProductsByTitle(keyword string, limit, offset int) ([]*models.Product, int, error) {
+	// Общее количество
+	var totalCount int
+	err := DB.QueryRow("SELECT COUNT(*) FROM products WHERE title ILIKE '%' || $1 || '%'", keyword).Scan(&totalCount)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	rows, err := DB.Query(`
+		SELECT id, title, description, price
+		FROM products
+		WHERE title ILIKE '%' || $1 || '%'
+		LIMIT $2 OFFSET $3
+	`, keyword, limit, offset)
+	if err != nil {
+		return nil, 0, err
+	}
+	defer rows.Close()
+
+	var products []*models.Product
+	for rows.Next() {
+		p := &models.Product{}
+		if err := rows.Scan(&p.ID, &p.Title, &p.Description, &p.Price); err != nil {
+			return nil, 0, err
+		}
+		products = append(products, p)
+	}
+	return products, totalCount, nil
 }

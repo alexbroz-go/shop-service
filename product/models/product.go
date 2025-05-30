@@ -5,5 +5,4 @@ type Product struct {
 	Title       string
 	Description string
 	Price       float64
-	Count       int
 }

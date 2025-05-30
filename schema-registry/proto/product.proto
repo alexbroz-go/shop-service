@@ -9,11 +9,26 @@ service ProductService {
   // Получить товар по ID
   rpc GetProduct (GetProductRequest) returns (Product);
   // Получить товар по названию
-  rpc GetProductByTitle (GetProductByTitleRequest) returns (Product);
+  rpc SearchProducts (SearchProductsRequest) returns (SearchProductsResponse);
   // Добавить новый товар (админ)
   rpc AddProduct (AddProductRequest) returns (AddProductResponse);
   // Удалить товар по ID
   rpc DeleteProduct (DeleteProductRequest) returns (DeleteProductResponse);
+}
+
+
+
+// Запрос для поиска товаров
+message SearchProductsRequest {
+  string query = 1; // строка поиска
+  int32 limit = 2;  // лимит результатов
+  int32 offset = 3; // смещение для пагинации
+}
+
+// Ответ по поиску товаров
+message SearchProductsResponse {
+  repeated Product products = 1;
+  int32 total_count = 2; // общее количество
 }
 
 // Запрос для получения товара по ID
@@ -21,17 +36,12 @@ message GetProductRequest {
   int32 product_id = 1;
 }
 
-// Запрос для поиска товара по названию
-message GetProductByTitleRequest {
-  string title = 1;
-}
 
 // Запрос для добавления нового товара
 message AddProductRequest {
   string title = 1;
   string description = 2;
   double price = 3;
-  int32 count = 4;
 }
 
 // Ответ при добавлении товара
@@ -55,5 +65,4 @@ message Product {
   string title = 2;
   string description = 3;
   double price = 4;
-  int32 count = 5;
 }

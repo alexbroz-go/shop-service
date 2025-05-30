@@ -30,20 +30,27 @@ func (s *server) GetProduct(ctx context.Context, req *pb.GetProductRequest) (*pb
 		Title:       product.Title,
 		Description: product.Description,
 		Price:       product.Price,
-		Count:       int32(product.Count),
 	}, nil
 }
-func (s *server) GetProductByTitle(ctx context.Context, req *pb.GetProductByTitleRequest) (*pb.Product, error) {
-	product, err := s.svc.GetProductByTitle(req.Title)
+func (s *server) SearchProducts(ctx context.Context, req *pb.SearchProductsRequest) (*pb.SearchProductsResponse, error) {
+	products, totalCount, err := s.svc.SearchProducts(req.Query, int(req.Limit), int(req.Offset))
 	if err != nil {
 		return nil, err
 	}
-	return &pb.Product{
-		Id:          int32(product.ID),
-		Title:       product.Title,
-		Description: product.Description,
-		Price:       product.Price,
-		Count:       int32(product.Count),
+
+	var pbProducts []*pb.Product
+	for _, p := range products {
+		pbProducts = append(pbProducts, &pb.Product{
+			Id:          int32(p.ID),
+			Title:       p.Title,
+			Description: p.Description,
+			Price:       p.Price,
+		})
+	}
+
+	return &pb.SearchProductsResponse{
+		Products:   pbProducts,
+		TotalCount: int32(totalCount),
 	}, nil
 }
 
@@ -60,7 +67,6 @@ func (s *server) AddProduct(ctx context.Context, req *pb.AddProductRequest) (*pb
 		Title:       req.Title,
 		Description: req.Description,
 		Price:       req.Price,
-		Count:       int(req.Count),
 	}
 	id, err := s.svc.AddProduct(product)
 	if err != nil {
