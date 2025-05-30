@@ -24,7 +24,24 @@ services:
       timeout: 5s      # Таймаут проверки
       retries: 5       # Количество повторных попыток
       start_period: 10s # Начальный период для инициализации
-    
+
+  db_product: 
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: product
+    ports:
+      - "5434:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d product"]
+      interval: 5s     
+      timeout: 5s      
+      retries: 5       
+      start_period: 10s 
+
+
 
   user-cart-order:
     image: aleksandraksenov/user-cart-order
@@ -40,3 +57,16 @@ services:
     env_file:
       # Подключаем файл с переменными окружения
       - ./user-cart-order/.env
+  
+  product:
+    build:
+      context: .
+      dockerfile: product/Dockerfile
+    ports:
+      - "50051:50051"
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      # Подключаем файл с переменными окружения
+      - ./product/.env
