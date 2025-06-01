@@ -3,7 +3,7 @@ name: User Cart Order CI/CD
 on:
   workflow_dispatch:
   push:
-    branches: [ main ]
+    branches: [ main ]  # Оставляем только main для релизных билдов
     paths:
       - 'user-cart-order/**'
       - 'schema-registry/proto/user-cart-order.proto'
@@ -35,7 +35,7 @@ jobs:
       with:
         context: .
         file: ./user-cart-order/Dockerfile
-        push: ${{ github.event_name != 'pull_request' }}
+        push: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' }}  # Добавляем проверку на ветку main
         tags: |
           ${{ secrets.DOCKERHUB_USERNAME }}/user-cart-order:latest
           ${{ secrets.DOCKERHUB_USERNAME }}/user-cart-order:${{ github.sha }}
