@@ -1,0 +1,49 @@
+name: Run Tests  # Название workflow
+
+on:  # Условия запуска
+  push:  # При пуше в репозиторий
+    branches-ignore:  # Игнорируем ветку main
+      - main
+  pull_request:  # При создании pull request
+    branches:  # Для всех веток
+      - '*'
+
+jobs:  # Определяем jobs
+  test:  # Наша job называется "test"
+    runs-on: ubuntu-latest  # Запускаем на последней версии Ubuntu
+    
+    services:  # Запускаем сервисы (в нашем случае PostgreSQL)
+      postgres:
+        image: postgres:latest  # Используем последний образ PostgreSQL
+        env:  # Переменные окружения для БД
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: product
+        ports:  # Пробрасываем порт
+          - 5434:5432
+        options: >-  # Настройки healthcheck
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    
+    steps:  # Шаги выполнения job
+    - uses: actions/checkout@v3  # Шаг 1: Получаем код репозитория
+    
+    - name: Set up Go  # Шаг 2: Устанавливаем Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: 1.20  # Указываем версию Go
+    
+    - name: Wait for PostgreSQL  # Шаг 3: Ждем запуска PostgreSQL
+      run: sleep 10
+    
+    - name: Run tests  # Шаг 4: Запускаем тесты
+      env:  # Устанавливаем переменные окружения
+        DB_HOST: localhost
+        DB_PORT: 5432
+        DB_USER: user
+        DB_PASSWORD: password
+        DB_NAME: product
+      run: |  # Команды для выполнения
+        go test -v -cover ./...   
