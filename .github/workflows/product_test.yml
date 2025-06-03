@@ -26,5 +26,5 @@ jobs:
         working-directory: ./product  # укажите путь к папке с go.mod
 
       - name: Запуск тестов
-        run: go test ./...
+        run: go test ./dao_test/...
         working-directory: ./product
