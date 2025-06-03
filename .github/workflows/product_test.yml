@@ -23,6 +23,8 @@ jobs:
 
       - name: Установка зависимостей
         run: go mod tidy
+        working-directory: ./product  # укажите путь к папке с go.mod
 
       - name: Запуск тестов
         run: go test ./...
+        working-directory: ./product
