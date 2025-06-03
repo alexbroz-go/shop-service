@@ -26,10 +26,10 @@ func GetConfig() *Config {
 		instance = &Config{
 			// Database settings
 			DBHost:     getEnvOrDefault("DB_HOST", "localhost"),
-			DBPort:     getEnvOrDefault("DB_PORT", "5432"),
-			DBUser:     getEnvOrDefault("DB_USER", "postgres"),
-			DBPassword: getEnvOrDefault("DB_PASSWORD", "postgres"),
-			DBName:     getEnvOrDefault("DB_NAME", "postgres"),
+			DBPort:     getEnvOrDefault("DB_PORT", "5433"),
+			DBUser:     getEnvOrDefault("DB_USER", "user"),
+			DBPassword: getEnvOrDefault("DB_PASSWORD", "password"),
+			DBName:     getEnvOrDefault("DB_NAME", "user_cart_order"),
 		}
 	})
 	return instance
