@@ -3,7 +3,9 @@ name: Run DAO_Tests user-cart-order
 on:
   push:
     branches:
-      - '**'  # запускать на все ветки, кроме main, если нужно исключить — добавьте условие
+      - '*'
+    branches-ignore:
+      - main
 
 jobs:
   test:
