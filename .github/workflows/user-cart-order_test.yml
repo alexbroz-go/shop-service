@@ -2,8 +2,6 @@ name: Run DAO_Tests user-cart-order
 
 on:
   push:
-    branches:
-      - '*'
     branches-ignore:
       - main
 
