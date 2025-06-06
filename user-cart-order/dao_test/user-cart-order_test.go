@@ -1,34 +1,25 @@
 package dao_test
 
 import (
-	"fmt"
 	"os"
 	"testing"
-	"time"
 
 	"user-cart-order/database"
 	"user-cart-order/models"
 )
 
 func TestMain(m *testing.M) {
-	// Инициализация базы данных
-	err := database.Init()
-	if err != nil {
+	if err := database.Init(); err != nil {
 		panic(err)
 	}
 	os.Exit(m.Run())
 }
 
-// Тест для создания и получения пользователя
-func TestCreateAndGetUser(t *testing.T) {
-	// Генерируем уникальный логин и email
-	uniqueSuffix := fmt.Sprintf("%d", time.Now().UnixNano())
-	login := "testuser_" + uniqueSuffix
-	email := login + "@example.com"
-
+func createTestUser(t *testing.T) models.User {
+	t.Helper()
 	user := models.User{
-		Login:    login,
-		Email:    email,
+		Login:    "testuser",
+		Email:    "testuser@example.com",
 		Password: "password123",
 	}
 
@@ -36,8 +27,25 @@ func TestCreateAndGetUser(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Ошибка при создании пользователя: %v", err)
 	}
+	user.ID = id
+	return user
+}
+func deleteTestUser(t *testing.T, userID int) {
+	t.Helper()
+	success, err := database.DeleteUserByID(userID)
+	if err != nil {
+		t.Fatalf("Ошибка при удалении пользователя: %v", err)
+	}
+	if !success {
+		t.Fatalf("Удаление пользователя не удалось, id=%d", userID)
+	}
+}
 
-	fetchedUser, err := database.GetUserByID(id)
+func TestCreateAndGetUser(t *testing.T) {
+	user := createTestUser(t)
+	defer deleteTestUser(t, user.ID)
+
+	fetchedUser, err := database.GetUserByID(user.ID)
 	if err != nil {
 		t.Fatalf("Ошибка при получении пользователя по ID: %v", err)
 	}
@@ -53,63 +61,38 @@ func TestCreateAndGetUser(t *testing.T) {
 	}
 }
 
-// Тест для создания и получения корзины
 func TestCreateAndGetCart(t *testing.T) {
-	uniqueSuffix := fmt.Sprintf("%d", time.Now().UnixNano())
-	login := "cartuser_" + uniqueSuffix
-	email := login + "@example.com"
+	user := createTestUser(t)
+	defer deleteTestUser(t, user.ID)
 
-	user := models.User{
-		Login:    login,
-		Email:    email,
-		Password: "pass",
-	}
-	userID, err := database.CreateUser(user)
-	if err != nil {
-		t.Fatalf("Ошибка при создании пользователя: %v", err)
-	}
-
-	cartID, err := database.CreateCart(userID)
+	cartID, err := database.CreateCart(user.ID)
 	if err != nil {
 		t.Fatalf("Ошибка при создании корзины: %v", err)
 	}
 
-	cart, err := database.GetCartByUserID(userID)
+	cart, err := database.GetCartByUserID(user.ID)
 	if err != nil {
 		t.Fatalf("Ошибка при получении корзины: %v", err)
 	}
 
-	if cart.UserID != userID {
-		t.Errorf("Ожидали userID=%d, получили=%d", userID, cart.UserID)
+	if cart.UserID != user.ID {
+		t.Errorf("Ожидали userID=%d, получили=%d", user.ID, cart.UserID)
 	}
 	if cart.ID != cartID {
 		t.Errorf("Ожидали id=%d, получили=%d", cartID, cart.ID)
 	}
 }
 
-// Тест для создания и получения заказа
 func TestCreateAndGetOrder(t *testing.T) {
-	uniqueSuffix := fmt.Sprintf("%d", time.Now().UnixNano())
-	login := "orderuser_" + uniqueSuffix
-	email := login + "@example.com"
-
-	user := models.User{
-		Login:    login,
-		Email:    email,
-		Password: "pass",
-	}
-	userID, err := database.CreateUser(user)
-	if err != nil {
-		t.Fatalf("Ошибка при создании пользователя: %v", err)
-	}
-
-	productID := 1
+	user := createTestUser(t)
+	defer deleteTestUser(t, user.ID)
 
 	order := models.Order{
-		UserID:    userID,
-		ProductID: productID,
+		UserID:    user.ID,
+		ProductID: 1,
 		Status:    "pending",
 	}
+
 	orderID, err := database.CreateOrder(order)
 	if err != nil {
 		t.Fatalf("Ошибка при создании заказа: %v", err)
@@ -130,7 +113,7 @@ func TestCreateAndGetOrder(t *testing.T) {
 		t.Errorf("Ожидали Status=%s, получили=%s", order.Status, fetchedOrder.Status)
 	}
 
-	orders, err := database.GetOrderHistory(userID)
+	orders, err := database.GetOrderHistory(user.ID)
 	if err != nil {
 		t.Fatalf("Ошибка при получении истории заказов: %v", err)
 	}
