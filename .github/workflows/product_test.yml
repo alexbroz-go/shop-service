@@ -2,7 +2,9 @@ name: Run DAO_Tests product
 on:
   push:
     branches:
-      - '**'  # запускать на все ветки, кроме main, если нужно исключить — добавьте условие
+      - '*'
+    branches-ignore:
+      - main
 
 jobs:
   test:
