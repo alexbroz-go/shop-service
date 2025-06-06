@@ -28,8 +28,8 @@ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 После установки компонентов выполните:
 
 ```
-# Из корневой директории Product
-protoc --proto_path=../schema-registry/proto --go_out=./proto --go-grpc_out=./proto ../schema-registry/proto/user-cart-order.proto
+# Из директории Product
+protoc --proto_path=../schema-registry/proto --go_out=./proto --go-grpc_out=./proto ../schema-registry/proto/product.proto
 ```
 
 ## Обновление Proto-файлов
