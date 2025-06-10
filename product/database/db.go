@@ -71,7 +71,7 @@ func GetProductByID(id int) (*models.Product, error) {
 }
 
 func GetAllProducts() ([]*models.Product, error) {
-	rows, err := DB.Query("SELECT id, title, description, price")
+	rows, err := DB.Query("SELECT id, title, description, price FROM products")
 	if err != nil {
 		return nil, err
 	}

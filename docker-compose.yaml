@@ -65,7 +65,7 @@ services:
     ports:
       - "50051:50051"
     depends_on:
-      db:
+      db_product:
         condition: service_healthy
     env_file:
       # Подключаем файл с переменными окружения
