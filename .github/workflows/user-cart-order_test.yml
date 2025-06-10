@@ -1,0 +1,45 @@
+name: Run DAO_Tests user-cart-order
+
+on:
+  push:
+    branches-ignore:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:13
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: testdb
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpass
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set environment variables
+        run: |
+          echo "DB_HOST=localhost" >> $GITHUB_ENV
+          echo "DB_PORT=5432" >> $GITHUB_ENV
+          echo "DB_USER=testuser" >> $GITHUB_ENV
+          echo "DB_PASSWORD=testpass" >> $GITHUB_ENV
+          echo "DB_NAME=testdb" >> $GITHUB_ENV
+
+      - name: Setup Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.23.0'
+
+      - name: Run tests
+        run: go test ./dao_test/...
+        working-directory: ./user-cart-order
