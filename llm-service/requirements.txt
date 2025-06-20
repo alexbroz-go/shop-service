@@ -1,0 +1,9 @@
+fastapi==0.104.1
+uvicorn==0.24.0
+redis==5.0.1
+yandexcloud>=0.292.0,!=0.293.0
+python-dotenv==1.0.0
+pydantic==2.4.2
+setuptools>=65.0.0
+yandex-cloud-ml-sdk==0.1.0
+psycopg2-binary==2.9.9
