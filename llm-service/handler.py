@@ -7,6 +7,11 @@ from product import get_product_info
 
 router = APIRouter()
 
+@router.get("/health")
+def health_check():
+    return {"status": "ok"}
+
+
 @router.post("/chat")
 async def chat_endpoint(request: Request):
     try:

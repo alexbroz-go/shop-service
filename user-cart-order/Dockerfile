@@ -16,6 +16,7 @@ RUN apk add --no-cache protobuf protobuf-dev git
 RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 
+ENV PATH="$PATH:$(go env GOPATH)/bin"
 # Копируем go.mod и go.sum для зависимостей
 # Это позволяет Docker кэшировать слои с зависимостями
 # и не скачивать их заново, если не изменились
