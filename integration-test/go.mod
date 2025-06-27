@@ -2,8 +2,6 @@ module integration-test
 
 go 1.23.0
 
-toolchain go1.23.3
-
 require (
 	github.com/stretchr/testify v1.10.0
 	github.com/testcontainers/testcontainers-go v0.37.0
