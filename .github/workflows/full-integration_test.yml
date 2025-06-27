@@ -20,4 +20,3 @@ jobs:
       - name: Run integration tests
         run: go test -v ./...
         working-directory: ./integration-test/integration
-

@@ -1,4 +1,4 @@
-Сборка образов
+Сборка образов для теста User-cart-order
 Docker build -t user-cart-order-image:latest -f user-cart-order/Dockerfile .
 
 Docker build -t product-image:latest -f product/Dockerfile .
