@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"strings"
 	"testing"
 	"time"
@@ -50,8 +51,10 @@ func TestLLMServiceIntegration(t *testing.T) {
 			Image:        "llm-service-image:latest",
 			ExposedPorts: []string{"8000/tcp"},
 			Env: map[string]string{
-				"REDIS_HOST": "redis_db",
-				"REDIS_PORT": "6379",
+				"REDIS_HOST":       "redis_db",
+				"REDIS_PORT":       "6379",
+				"YANDEX_API_KEY":   os.Getenv("YANDEX_API_KEY"),
+				"YANDEX_FOLDER_ID": os.Getenv("YANDEX_FOLDER_ID"),
 			},
 			Networks:   []string{networkName},
 			WaitingFor: wait.ForLog("Uvicorn running on http://0.0.0.0:8000").WithStartupTimeout(30 * time.Second),

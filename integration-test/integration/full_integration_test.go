@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"strconv"
 	"testing"
 
@@ -109,8 +110,10 @@ func TestFullIntegration(t *testing.T) {
 	llmReq := testcontainers.ContainerRequest{
 		Image: "llm-service-image:latest",
 		Env: map[string]string{
-			"REDIS_HOST": "redis",
-			"REDIS_PORT": "6379",
+			"REDIS_HOST":       "redis",
+			"REDIS_PORT":       "6379",
+			"YANDEX_API_KEY":   os.Getenv("YANDEX_API_KEY"),
+			"YANDEX_FOLDER_ID": os.Getenv("YANDEX_FOLDER_ID"),
 		},
 		ExposedPorts: []string{"8000/tcp"},
 		WaitingFor:   wait.ForLog("Uvicorn running on http://0.0.0.0:8000"),
