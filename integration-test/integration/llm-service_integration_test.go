@@ -35,7 +35,7 @@ func TestLLMServiceIntegration(t *testing.T) {
 			ExposedPorts: []string{"6379/tcp"},
 			Networks:     []string{networkName},
 			NetworkAliases: map[string][]string{
-				networkName: {"redis_db"}, // чтобы LLM мог резолвить redis_db
+				networkName: {"redis_db"},
 			},
 			WaitingFor: wait.ForListeningPort("6379/tcp"),
 		},
@@ -52,7 +52,6 @@ func TestLLMServiceIntegration(t *testing.T) {
 			Env: map[string]string{
 				"REDIS_HOST": "redis_db",
 				"REDIS_PORT": "6379",
-				// Если есть другие обязательные переменные окружения — добавь их сюда
 			},
 			Networks:   []string{networkName},
 			WaitingFor: wait.ForLog("Uvicorn running on http://0.0.0.0:8000").WithStartupTimeout(30 * time.Second),
