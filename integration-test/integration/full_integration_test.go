@@ -114,6 +114,7 @@ func TestFullIntegration(t *testing.T) {
 			"REDIS_PORT":       "6379",
 			"YANDEX_API_KEY":   os.Getenv("YANDEX_API_KEY"),
 			"YANDEX_FOLDER_ID": os.Getenv("YANDEX_FOLDER_ID"),
+			"MODEL_NAME":       "yandexgpt",
 		},
 		ExposedPorts: []string{"8000/tcp"},
 		WaitingFor:   wait.ForLog("Uvicorn running on http://0.0.0.0:8000"),
