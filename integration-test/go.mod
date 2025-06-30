@@ -3,6 +3,7 @@ module integration-test
 go 1.23.3
 
 require (
+	github.com/joho/godotenv v1.5.1
 	github.com/stretchr/testify v1.10.0
 	github.com/testcontainers/testcontainers-go v0.37.0
 	google.golang.org/grpc v1.73.0

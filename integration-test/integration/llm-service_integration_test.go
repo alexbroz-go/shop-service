@@ -55,6 +55,7 @@ func TestLLMServiceIntegration(t *testing.T) {
 				"REDIS_PORT":       "6379",
 				"YANDEX_API_KEY":   os.Getenv("YANDEX_API_KEY"),
 				"YANDEX_FOLDER_ID": os.Getenv("YANDEX_FOLDER_ID"),
+				"MODEL_NAME":       "yandexgpt",
 			},
 			Networks:   []string{networkName},
 			WaitingFor: wait.ForLog("Uvicorn running on http://0.0.0.0:8000").WithStartupTimeout(30 * time.Second),
