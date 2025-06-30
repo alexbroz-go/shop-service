@@ -26,9 +26,11 @@ jobs:
       - name: Build llm-service image
         run: docker build -f llm-service/Dockerfile -t llm-service-image:latest .
 
+      - name: Create .env file
+        run: |
+          echo "YANDEX_API_KEY=${{ secrets.YANDEX_API_KEY }}" > ./integration-test/integration/.env
+          echo "YANDEX_FOLDER_ID=${{ secrets.YANDEX_FOLDER_ID }}" >> ./integration-test/integration/.env
+
       - name: Run integration tests
-        env:
-          YANDEX_API_KEY: ${{ secrets.YANDEX_API_KEY }}
-          YANDEX_FOLDER_ID: ${{ secrets.YANDEX_FOLDER_ID }}
-        run: go test -v ./...
         working-directory: ./integration-test/integration
+        run: go test -v ./...
