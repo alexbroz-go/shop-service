@@ -12,7 +12,14 @@ func TestMain(m *testing.M) {
 	if err := database.Init(); err != nil {
 		panic(err)
 	}
-	os.Exit(m.Run())
+	// Clean DB state for stable tests
+	if _, err := database.DB.Exec("TRUNCATE TABLE orders, carts, users RESTART IDENTITY CASCADE;"); err != nil {
+		panic(err)
+	}
+	code := m.Run()
+	// Optional: clean after run as well
+	_, _ = database.DB.Exec("TRUNCATE TABLE orders, carts, users RESTART IDENTITY CASCADE;")
+	os.Exit(code)
 }
 
 func createTestUser(t *testing.T) models.User {

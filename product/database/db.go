@@ -27,20 +27,10 @@ func Init() error {
 		return err
 	}
 
-	return createTable()
+	return nil
 }
 
-func createTable() error {
-	_, err := DB.Exec(`
-        CREATE TABLE IF NOT EXISTS products (
-            id SERIAL PRIMARY KEY,
-            title VARCHAR(255) NOT NULL,
-            description TEXT,
-            price NUMERIC(10,2) NOT NULL
-        );
-    `)
-	return err
-}
+// schema is managed via SQL migrations (golang-migrate)
 
 func DeleteProduct(id int) (bool, error) {
 	result, err := DB.Exec("DELETE FROM products WHERE id=$1", id)
