@@ -42,6 +42,7 @@ COPY --from=builder /app/main .
 EXPOSE 50051
 
 # Команда запуска
+ENV BOOTSTRAP_SCHEMA=1
 CMD ["./main"]
 
 #Команда для генерации прото файлов protoc --proto_path=../schema-registry/proto --go_out=./proto --go-grpc_out=./proto ../schema-registry/proto/product.proto

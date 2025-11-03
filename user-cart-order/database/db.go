@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	"fmt"
+    "os"
 	"user-cart-order/config"
 	"user-cart-order/models"
 
@@ -22,13 +23,40 @@ func Init() error {
 	if err != nil {
 		return fmt.Errorf("ошибка подключения: %w", err)
 	}
-	if err := DB.Ping(); err != nil {
+    if err := DB.Ping(); err != nil {
 		return fmt.Errorf("ошибка ping: %w", err)
 	}
-	return nil
+    if os.Getenv("BOOTSTRAP_SCHEMA") == "1" {
+        if err := createTables(); err != nil {
+            return err
+        }
+    }
+    return nil
 }
 
-// schema is managed via SQL migrations (golang-migrate)
+func createTables() error {
+    _, err := DB.Exec(`
+        CREATE TABLE IF NOT EXISTS users (
+            id SERIAL PRIMARY KEY,
+            login VARCHAR(50) UNIQUE NOT NULL,
+            email VARCHAR(100) UNIQUE NOT NULL,
+            password VARCHAR(255) NOT NULL
+        );
+        CREATE TABLE IF NOT EXISTS carts (
+            id SERIAL PRIMARY KEY,
+            user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+            created_at TIMESTAMP DEFAULT NOW()
+        );
+        CREATE TABLE IF NOT EXISTS orders (
+            id SERIAL PRIMARY KEY,
+            user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+            product_id INTEGER NOT NULL,
+            created_at TIMESTAMP DEFAULT NOW(),
+            status VARCHAR(20)
+        );
+    `)
+    return err
+}
 
 //  Методы Таблицы users
 
