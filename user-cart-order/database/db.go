@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	"fmt"
+    "os"
 	"user-cart-order/config"
 	"user-cart-order/models"
 
@@ -22,15 +23,19 @@ func Init() error {
 	if err != nil {
 		return fmt.Errorf("ошибка подключения: %w", err)
 	}
-	if err := DB.Ping(); err != nil {
+    if err := DB.Ping(); err != nil {
 		return fmt.Errorf("ошибка ping: %w", err)
 	}
-	return createTables()
+    if os.Getenv("BOOTSTRAP_SCHEMA") == "1" {
+        if err := createTables(); err != nil {
+            return err
+        }
+    }
+    return nil
 }
 
 func createTables() error {
-	// Таблицы (если не существуют)
-	_, err := DB.Exec(`
+    _, err := DB.Exec(`
         CREATE TABLE IF NOT EXISTS users (
             id SERIAL PRIMARY KEY,
             login VARCHAR(50) UNIQUE NOT NULL,
@@ -50,7 +55,7 @@ func createTables() error {
             status VARCHAR(20)
         );
     `)
-	return err
+    return err
 }
 
 //  Методы Таблицы users

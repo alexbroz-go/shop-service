@@ -12,7 +12,14 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		panic(err)
 	}
-	os.Exit(m.Run())
+	// Clean DB for stable tests
+	if _, err := database.DB.Exec("TRUNCATE TABLE products RESTART IDENTITY CASCADE;"); err != nil {
+		panic(err)
+	}
+	code := m.Run()
+	// Optional cleanup after tests
+	_, _ = database.DB.Exec("TRUNCATE TABLE products RESTART IDENTITY CASCADE;")
+	os.Exit(code)
 }
 
 // Тест для функции CreateProduct и GetProductByID
