@@ -3,7 +3,10 @@ package database
 import (
 	"database/sql"
 	"fmt"
-    "os"
+	"os"
+	"path/filepath"
+	"regexp"
+	"sort"
 	"user-cart-order/config"
 	"user-cart-order/models"
 
@@ -23,39 +26,49 @@ func Init() error {
 	if err != nil {
 		return fmt.Errorf("ошибка подключения: %w", err)
 	}
-    if err := DB.Ping(); err != nil {
+	if err := DB.Ping(); err != nil {
 		return fmt.Errorf("ошибка ping: %w", err)
 	}
-    if os.Getenv("BOOTSTRAP_SCHEMA") == "1" {
-        if err := createTables(); err != nil {
-            return err
-        }
-    }
-    return nil
+
+	if os.Getenv("MIGRATE_ON_STARTUP") == "1" {
+		if err := applySQLMigrations("migrations"); err != nil {
+			return fmt.Errorf("применение миграций: %w", err)
+		}
+	}
+	return nil
 }
 
-func createTables() error {
-    _, err := DB.Exec(`
-        CREATE TABLE IF NOT EXISTS users (
-            id SERIAL PRIMARY KEY,
-            login VARCHAR(50) UNIQUE NOT NULL,
-            email VARCHAR(100) UNIQUE NOT NULL,
-            password VARCHAR(255) NOT NULL
-        );
-        CREATE TABLE IF NOT EXISTS carts (
-            id SERIAL PRIMARY KEY,
-            user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-            created_at TIMESTAMP DEFAULT NOW()
-        );
-        CREATE TABLE IF NOT EXISTS orders (
-            id SERIAL PRIMARY KEY,
-            user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-            product_id INTEGER NOT NULL,
-            created_at TIMESTAMP DEFAULT NOW(),
-            status VARCHAR(20)
-        );
-    `)
-    return err
+func applySQLMigrations(dir string) error {
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		return err
+	}
+	re := regexp.MustCompile(`^\d+_.*\.up\.sql$`)
+	var files []string
+	for _, e := range entries {
+		if e.IsDir() {
+			continue
+		}
+		name := e.Name()
+		if re.MatchString(name) {
+			files = append(files, name)
+		}
+	}
+	sort.Strings(files)
+	for _, fname := range files {
+		path := filepath.Join(dir, fname)
+		content, err := os.ReadFile(path)
+		if err != nil {
+			return err
+		}
+		if len(content) == 0 {
+			continue
+		}
+		if _, err := DB.Exec(string(content)); err != nil {
+			return fmt.Errorf("миграция %s: %w", fname, err)
+		}
+	}
+	return nil
 }
 
 //  Методы Таблицы users

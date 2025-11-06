@@ -37,12 +37,14 @@ WORKDIR /app
 
 # Копируем собранный бинарник из этапа сборки
 COPY --from=builder /app/main .
+COPY product/migrations ./migrations
 
 # Открываем порт, на котором будет слушать приложение
 EXPOSE 50051
 
+# По умолчанию включаем миграции при старте (для тестов/Testcontainers).
+ENV MIGRATE_ON_STARTUP=1
 # Команда запуска
-ENV BOOTSTRAP_SCHEMA=1
 CMD ["./main"]
 
 #Команда для генерации прото файлов protoc --proto_path=../schema-registry/proto --go_out=./proto --go-grpc_out=./proto ../schema-registry/proto/product.proto

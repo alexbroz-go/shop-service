@@ -3,9 +3,12 @@ package database
 import (
 	"database/sql"
 	"fmt"
-    "os"
+	"os"
+	"path/filepath"
 	"product/config"
 	"product/models"
+	"regexp"
+	"sort"
 
 	_ "github.com/lib/pq"
 )
@@ -24,27 +27,49 @@ func Init() error {
 		return err
 	}
 
-    if err := DB.Ping(); err != nil {
+	if err := DB.Ping(); err != nil {
 		return err
 	}
-    if os.Getenv("BOOTSTRAP_SCHEMA") == "1" {
-        if err := createTable(); err != nil {
-            return err
-        }
-    }
+
+	if os.Getenv("MIGRATE_ON_STARTUP") == "1" {
+		if err := applySQLMigrations("migrations"); err != nil {
+			return fmt.Errorf("apply migrations: %w", err)
+		}
+	}
 	return nil
 }
 
-func createTable() error {
-    _, err := DB.Exec(`
-        CREATE TABLE IF NOT EXISTS products (
-            id SERIAL PRIMARY KEY,
-            title VARCHAR(255) NOT NULL,
-            description TEXT,
-            price NUMERIC(10,2) NOT NULL
-        );
-    `)
-    return err
+func applySQLMigrations(dir string) error {
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		return err
+	}
+	re := regexp.MustCompile(`^\d+_.*\.up\.sql$`)
+	var files []string
+	for _, e := range entries {
+		if e.IsDir() {
+			continue
+		}
+		name := e.Name()
+		if re.MatchString(name) {
+			files = append(files, name)
+		}
+	}
+	sort.Strings(files)
+	for _, fname := range files {
+		path := filepath.Join(dir, fname)
+		content, err := os.ReadFile(path)
+		if err != nil {
+			return err
+		}
+		if len(content) == 0 {
+			continue
+		}
+		if _, err := DB.Exec(string(content)); err != nil {
+			return fmt.Errorf("migration %s: %w", fname, err)
+		}
+	}
+	return nil
 }
 
 func DeleteProduct(id int) (bool, error) {
