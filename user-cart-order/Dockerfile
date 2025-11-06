@@ -60,6 +60,5 @@ COPY --from=builder /app/main .
 # Указываем порт, который будет прослушивать приложение
 EXPOSE 50052
 
-ENV BOOTSTRAP_SCHEMA=1
 # Команда для запуска приложения
 CMD ["./main"]

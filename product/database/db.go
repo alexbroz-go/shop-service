@@ -3,7 +3,6 @@ package database
 import (
 	"database/sql"
 	"fmt"
-    "os"
 	"product/config"
 	"product/models"
 
@@ -24,27 +23,10 @@ func Init() error {
 		return err
 	}
 
-    if err := DB.Ping(); err != nil {
+	if err := DB.Ping(); err != nil {
 		return err
 	}
-    if os.Getenv("BOOTSTRAP_SCHEMA") == "1" {
-        if err := createTable(); err != nil {
-            return err
-        }
-    }
 	return nil
-}
-
-func createTable() error {
-    _, err := DB.Exec(`
-        CREATE TABLE IF NOT EXISTS products (
-            id SERIAL PRIMARY KEY,
-            title VARCHAR(255) NOT NULL,
-            description TEXT,
-            price NUMERIC(10,2) NOT NULL
-        );
-    `)
-    return err
 }
 
 func DeleteProduct(id int) (bool, error) {

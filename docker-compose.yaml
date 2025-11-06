@@ -71,11 +71,9 @@ services:
       # Проброс порта для gRPC сервиса
       - "50052:50052"
     depends_on:
-      # Ждем, пока база данных будет полностью готова к работе
-      # Используем condition: service_healthy вместо простого списка зависимостей
-      # для решения проблемы с подключением к базе данных
-      db:
-        condition: service_healthy
+      # Ждем успешного применения миграций
+      migrate_user_cart_order:
+        condition: service_completed_successfully
     env_file:
       # Подключаем файл с переменными окружения
       - ./user-cart-order/.env
@@ -87,8 +85,36 @@ services:
     ports:
       - "50051:50051"
     depends_on:
-      db_product:
-        condition: service_healthy
+      # Ждем успешного применения миграций
+      migrate_product:
+        condition: service_completed_successfully
     env_file:
       # Подключаем файл с переменными окружения
       - ./product/.env
+
+  migrate_user_cart_order:
+    image: migrate/migrate:4
+    command: [
+      "-path", "/migrations",
+      "-database", "postgres://user:password@db:5432/user_cart_order?sslmode=disable",
+      "up"
+    ]
+    volumes:
+      - ./user-cart-order/migrations:/migrations
+    depends_on:
+      db:
+        condition: service_healthy
+
+  migrate_product:
+    image: migrate/migrate:4
+    command: [
+      "-path", "/migrations",
+      "-database", "postgres://user:password@db_product:5432/product?sslmode=disable",
+      "up"
+    ]
+    volumes:
+      - ./product/migrations:/migrations
+    depends_on:
+      db_product:
+        condition: service_healthy
+      
