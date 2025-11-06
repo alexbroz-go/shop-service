@@ -77,6 +77,8 @@ services:
     env_file:
       # Подключаем файл с переменными окружения
       - ./user-cart-order/.env
+    environment:
+      MIGRATE_ON_STARTUP: "0"
   
   product:
     build:
@@ -91,6 +93,8 @@ services:
     env_file:
       # Подключаем файл с переменными окружения
       - ./product/.env
+    environment:
+      MIGRATE_ON_STARTUP: "0"
 
   migrate_user_cart_order:
     image: migrate/migrate:4

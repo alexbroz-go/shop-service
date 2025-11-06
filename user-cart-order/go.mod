@@ -6,6 +6,7 @@ toolchain go1.23.3
 
 require (
 	github.com/lib/pq v1.10.9
+	github.com/golang-migrate/migrate/v4 v4.16.2
 	golang.org/x/crypto v0.37.0
 	google.golang.org/grpc v1.72.0
 	google.golang.org/protobuf v1.36.5

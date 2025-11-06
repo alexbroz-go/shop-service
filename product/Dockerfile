@@ -37,10 +37,13 @@ WORKDIR /app
 
 # Копируем собранный бинарник из этапа сборки
 COPY --from=builder /app/main .
+COPY product/migrations ./migrations
 
 # Открываем порт, на котором будет слушать приложение
 EXPOSE 50051
 
+# По умолчанию включаем миграции при старте (для тестов/Testcontainers).
+ENV MIGRATE_ON_STARTUP=1
 # Команда запуска
 CMD ["./main"]
 
